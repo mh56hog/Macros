@@ -1,0 +1,220 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Macro Adjuster</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <span class="navbar-brand">Recipe Macro Adjuster</span>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <!-- Recipe Input Card -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Recipe Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="recipe-form">
+                            <div class="mb-3">
+                                <label for="recipe-name" class="form-label">Recipe Name</label>
+                                <input type="text" class="form-control" id="recipe-name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="servings" class="form-label">Servings</label>
+                                <input type="number" class="form-control" id="servings" value="4" min="1" required>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Ingredients Card -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Ingredients</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="ingredients-container">
+                            <!-- Template ingredient row -->
+                            <div class="ingredient-row mb-3 pb-3 border-bottom">
+                                <div class="row mb-2">
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control ingredient-name" placeholder="Ingredient name" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" class="form-control ingredient-quantity" placeholder="Qty" step="0.1" min="0" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-select ingredient-unit">
+                                            <option value="g">g</option>
+                                            <option value="ml">ml</option>
+                                            <option value="cup">cup</option>
+                                            <option value="tbsp">tbsp</option>
+                                            <option value="tsp">tsp</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text">Calories</span>
+                                            <input type="number" class="form-control macro-calories" step="1" min="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text">Protein</span>
+                                            <input type="number" class="form-control macro-protein" step="0.1" min="0">
+                                            <span class="input-group-text">g</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text">Carbs</span>
+                                            <input type="number" class="form-control macro-carbs" step="0.1" min="0">
+                                            <span class="input-group-text">g</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text">Fat</span>
+                                            <input type="number" class="form-control macro-fat" step="0.1" min="0">
+                                            <span class="input-group-text">g</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-danger mt-2 remove-ingredient">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary" id="add-ingredient">+ Add Ingredient</button>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h6>Recipe Totals</h6>
+                                <div class="d-flex justify-content-around">
+                                    <div>Calories: <span id="total-calories">0</span></div>
+                                    <div>Protein: <span id="total-protein">0</span>g</div>
+                                    <div>Carbs: <span id="total-carbs">0</span>g</div>
+                                    <div>Fat: <span id="total-fat">0</span>g</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Macro Targets Card -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Adjust Macro Targets</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="target-calories" class="form-label">Target Calories</label>
+                            <input type="range" class="form-range" id="target-calories" min="100" max="2000" step="50" value="0">
+                            <div class="text-center">
+                                <span id="target-calories-display">0</span> calories
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="protein-percent" class="form-label">Protein (%)</label>
+                                <input type="range" class="form-range" id="protein-percent" min="10" max="60" value="30">
+                                <div class="text-center">
+                                    <span id="protein-percent-display">30%</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="carbs-percent" class="form-label">Carbs (%)</label>
+                                <input type="range" class="form-range" id="carbs-percent" min="10" max="60" value="40">
+                                <div class="text-center">
+                                    <span id="carbs-percent-display">40%</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fat-percent" class="form-label">Fat (%)</label>
+                                <input type="range" class="form-range" id="fat-percent" min="10" max="60" value="30">
+                                <div class="text-center">
+                                    <span id="fat-percent-display">30%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-2">
+                            <span id="macro-total">Total: 100%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mb-4 text-center">
+                    <button type="button" class="btn btn-lg btn-primary" id="calculate-btn">Calculate Adjusted Recipe</button>
+                </div>
+
+                <!-- Results Section (initially hidden) -->
+                <div id="results-section" style="display: none;">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Adjusted Recipe</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Adjusted Ingredients</h6>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Ingredient</th>
+                                            <th>Original</th>
+                                            <th>Adjusted</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="results-table">
+                                        <!-- Results will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">Original Macros</div>
+                                        <div class="card-body">
+                                            <div>Calories: <span id="original-calories">0</span></div>
+                                            <div>Protein: <span id="original-protein">0</span>g (<span id="original-protein-pct">0</span>%)</div>
+                                            <div>Carbs: <span id="original-carbs">0</span>g (<span id="original-carbs-pct">0</span>%)</div>
+                                            <div>Fat: <span id="original-fat">0</span>g (<span id="original-fat-pct">0</span>%)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">Adjusted Macros</div>
+                                        <div class="card-body">
+                                            <div>Calories: <span id="adjusted-calories">0</span></div>
+                                            <div>Protein: <span id="adjusted-protein">0</span>g (<span id="adjusted-protein-pct">0</span>%)</div>
+                                            <div>Carbs: <span id="adjusted-carbs">0</span>g (<span id="adjusted-carbs-pct">0</span>%)</div>
+                                            <div>Fat: <span id="adjusted-fat">0</span>g (<span id="adjusted-fat-pct">0</span>%)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
